@@ -5,6 +5,7 @@ namespace Pronamic\Twinfield\Customer;
 class Customer
 {
     private $code;
+    private $office;
     private $UID;
     private $status;
     private $name;
@@ -41,7 +42,23 @@ class Customer
         $this->code = $code;
         return $this;
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getOffice()
+    {
+        return $this->office;
+    }
+
+    /**
+     * @param mixed $office
+     */
+    public function setOffice($office)
+    {
+        $this->office = $office;
+    }
+
     public function getID()
     {
         trigger_error('getID is a deprecated method: Use getCode', E_USER_NOTICE);
