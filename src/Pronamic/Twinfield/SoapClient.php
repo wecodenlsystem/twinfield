@@ -43,7 +43,7 @@ class SoapClient extends \SoapClient
 
         // Throw the error after 5 attempts
         if ($retry_count == $max_retries) {
-            throw new \SoapFault('Failed after 5 attempts');
+            throw new \SoapFault(0, 'Failed after 5 attempts');
         }
         
         return $result;
