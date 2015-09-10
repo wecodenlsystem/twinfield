@@ -35,7 +35,7 @@ class Login
      * Holds the passed in Config instance
      * 
      * @access private
-     * @var Pronamic\Twinfield\Secure\Config
+     * @var \Pronamic\Twinfield\Secure\Config
      */
     private $config;
 
@@ -167,7 +167,7 @@ class Login
      * @since 0.0.1
      *
      * @access public
-     * @return \SoapClient
+     * @return SoapClient
      */
     public function getClient()
     {

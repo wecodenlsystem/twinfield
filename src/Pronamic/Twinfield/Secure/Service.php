@@ -47,7 +47,7 @@ class Service
      * Holds the response from the a request
      *
      * @access private
-     * @var DOMDocument
+     * @var \DOMDocument
      */
     private $response;
 
@@ -79,8 +79,8 @@ class Service
      * @since 0.0.1
      *
      * @access public
-     * @param Document $document A class that extended Secure\Document
-     * @return \DOMDocument The response from the request
+     * @param \DOMDocument $document A class that extended Secure\Document
+     * @return Response The response from the request
      */
     public function send(\DOMDocument $document)
     {

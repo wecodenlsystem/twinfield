@@ -4,6 +4,7 @@ namespace Pronamic\Twinfield\Customer;
 use \Pronamic\Twinfield\Factory\ParentFactory;
 use \Pronamic\Twinfield\Customer\Mapper\CustomerMapper;
 use \Pronamic\Twinfield\Request as Request;
+use Pronamic\Twinfield\Response\Response;
 
 /**
  * CustomerFactory
