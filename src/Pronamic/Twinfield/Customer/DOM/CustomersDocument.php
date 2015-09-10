@@ -57,6 +57,12 @@ class CustomersDocument extends \DOMDocument
             'type'      => 'getType',
             'website'   => 'getWebsite',
         );
+        // Some tags should not be placed in the document when empty
+        // For example to create a new customer
+        $optionalTags = array(
+            'code',
+            'office'
+        );
 
         $status = $customer->getStatus();
         if (!empty($status)) {
@@ -65,16 +71,20 @@ class CustomersDocument extends \DOMDocument
 
         // Go through each customer element and use the assigned method
         foreach ($customerTags as $tag => $method) {
-            
-            // Make text node for method value
-            $node = $this->createTextNode($customer->$method());
-            
-            // Make the actual element and assign the node
-            $element = $this->createElement($tag);
-            $element->appendChild($node);
-            
-            // Add the full element
-            $this->dimensionElement->appendChild($element);
+
+            $value = $customer->$method();
+
+            if ($value || (!$value && !in_array($tag, $optionalTags))) {
+                // Make text node for method value
+                $node = $this->createTextNode($customer->$method());
+
+                // Make the actual element and assign the node
+                $element = $this->createElement($tag);
+                $element->appendChild($node);
+
+                // Add the full element
+                $this->dimensionElement->appendChild($element);
+            }
         }
         
         // Check if the financial information should be supplied
