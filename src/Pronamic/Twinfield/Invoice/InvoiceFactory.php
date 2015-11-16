@@ -1,6 +1,8 @@
 <?php
 namespace Pronamic\Twinfield\Invoice;
 
+use Pronamic\Twinfield\Browse\DOM\BrowsePaymentStatusDocument;
+use Pronamic\Twinfield\Browse\Mapper\BrowseMapper;
 use \Pronamic\Twinfield\Factory\ParentFactory;
 use \Pronamic\Twinfield\Invoice\Mapper\InvoiceMapper;
 use \Pronamic\Twinfield\Request as Request;
@@ -138,5 +140,74 @@ class InvoiceFactory extends ParentFactory
                 return false;
             }
         }
+    }
+
+
+    /**
+     * Given a list of invoiceIds this method will return whether the corresponding invoices are
+     * fully paid, partially paid or not yet paid
+     *
+     * @param int[] $invoiceIds
+     * @return InvoicePaidStatus[]
+     */
+    public function getInvoicePaidStatus(array $invoiceIds) {
+        // Attempts to process the login
+        if ($this->getLogin()->process()) {
+
+            // Gets the secure service
+            $service = $this->getService();
+
+            $statusDocument = new BrowsePaymentStatusDocument();
+
+            // As per https://c3.twinfield.com/webservices/documentation/#/UseCases/PaidInvoices
+            // 1. Get all available invoices
+            $response = $service->send($statusDocument);
+            $this->setResponse($response);
+            if (!$response->isSuccessful()) {
+                return array();
+            }
+            $availableInvoices = BrowseMapper::mapInvoicePaidStatus($response);
+
+            // 2. Get all proposed invoices
+            $statusDocument->setQueryStatus('proposed');
+            $response = $service->send($statusDocument);
+            $this->setResponse($response);
+            if (!$response->isSuccessful()) {
+                return array();
+            }
+            $proposedInvoices = BrowseMapper::mapInvoicePaidStatus($response);
+
+            // 3. all invoices that are not returned by twinfield can be considered as fully paid
+            $fullyPaidInvoiceIds = array_diff($invoiceIds, array_keys($availableInvoices), array_keys($proposedInvoices));
+            $invoices = array();
+            foreach($fullyPaidInvoiceIds as $id) {
+                $invoicePaidStatus = new InvoicePaidStatus();
+                $invoicePaidStatus->setInvoiceNumber($id);
+                $invoicePaidStatus->setStatus(InvoicePaidStatus::STATUS_FULLY_PAID);
+                $invoices[$id] = $invoicePaidStatus;
+            }
+
+            // 4. part payments have status available
+            $remainingIds = array_diff($invoiceIds, $fullyPaidInvoiceIds);
+            foreach($remainingIds as $id) {
+                $invoice = null;
+                if(array_key_exists($id, $availableInvoices)) {
+                    $invoice = $availableInvoices[$id];
+                    if($invoice->getPaidAmount() > 0) {
+                        $invoice->setStatus(InvoicePaidStatus::STATUS_PARTIALLY_PAID);
+                        $invoice[$id] = $invoice;
+                    }
+                }
+                if(!$invoice) { // invoice is not fully and not partially paid
+                    $invoicePaidStatus = new InvoicePaidStatus();
+                    $invoicePaidStatus->setInvoiceNumber($id);
+                    $invoicePaidStatus->setStatus(InvoicePaidStatus::STATUS_UNPAID);
+                    $invoices[$id] = $invoicePaidStatus;
+                }
+            }
+
+            return $invoices;
+        }
+        return array();
     }
 }
