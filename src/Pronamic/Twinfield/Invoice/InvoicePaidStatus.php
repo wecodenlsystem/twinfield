@@ -38,7 +38,7 @@ class InvoicePaidStatus
     /**
      * @param int $invoiceNumber
      */
-    public function setInvoiceNumber(int $invoiceNumber)
+    public function setInvoiceNumber($invoiceNumber)
     {
         $this->invoiceNumber = $invoiceNumber;
     }
@@ -54,7 +54,7 @@ class InvoicePaidStatus
     /**
      * @param string $status
      */
-    public function setStatus(string $status)
+    public function setStatus($status)
     {
         $this->status = $status;
     }
@@ -78,7 +78,7 @@ class InvoicePaidStatus
     /**
      * @param float $totalAmount
      */
-    public function setTotalAmount(float $totalAmount)
+    public function setTotalAmount($totalAmount)
     {
         $this->totalAmount = $totalAmount;
     }
@@ -94,7 +94,7 @@ class InvoicePaidStatus
     /**
      * @param float $amountOpen
      */
-    public function setAmountOpen(float $amountOpen)
+    public function setAmountOpen($amountOpen)
     {
         $this->amountOpen = $amountOpen;
     }
