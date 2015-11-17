@@ -25,7 +25,7 @@ class BrowseMapper
             /** @var DomElement $field */
             foreach($fields as $field) {
                 $fieldName = $field->getAttribute('field');
-                if($fieldName == 'fin.trs.head.number') {
+                if($fieldName == 'fin.trs.line.invnumber') {
                     $invoicePaidStatus->setInvoiceNumber((int) $field->textContent);
                 }
                 if($fieldName == 'fin.trs.line.valuesigned') {

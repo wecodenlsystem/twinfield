@@ -26,6 +26,11 @@ class BrowsePaymentStatusDocument extends DOMDocument
           <visible>true</visible>
        </column>
        <column>
+          <field>fin.trs.line.invnumber</field>
+          <label>Factuurnr.</label>
+          <visible>true</visible>
+       </column>
+       <column>
           <field>fin.trs.head.status</field>
           <label>Status</label>
           <visible>true</visible>
