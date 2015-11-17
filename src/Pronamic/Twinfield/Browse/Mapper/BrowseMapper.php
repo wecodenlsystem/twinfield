@@ -28,9 +28,6 @@ class BrowseMapper
                 if($fieldName == 'fin.trs.head.number') {
                     $invoicePaidStatus->setInvoiceNumber((int) $field->textContent);
                 }
-                if($fieldName == 'fin.trs.head.status') {
-                    $invoicePaidStatus->setStatus($field->textContent);
-                }
                 if($fieldName == 'fin.trs.line.valuesigned') {
                     $invoicePaidStatus->setTotalAmount((float) $field->textContent);
                 }
