@@ -3,6 +3,7 @@ namespace Pronamic\Twinfield\Browse\DOM;
 
 
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 use DOMText;
 
@@ -71,11 +72,11 @@ class BrowsePaymentStatusDocument extends DOMDocument
 
     public function setQueryStatus($status) {
         $columns = $this->getElementsByTagName('column');
-        /** @var DomNode $column */
+        /** @var DomElement $column */
         foreach($columns as $column) {
-            $field = $column->firstChild;
-            if($field->firstChild->textContent == 'fin.trs.line.matchstatus') {
-                $node = $column->lastChild;
+            $field = $column->getElementsByTagName('field')->item(0);
+            if($field->textContent == 'fin.trs.line.matchstatus') {
+                $node = $column->getElementsByTagName('from')->item(0);
                 $node->removeChild($node->firstChild);
                 $node->appendChild(new DOMText($status));
             }
