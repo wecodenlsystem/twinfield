@@ -198,7 +198,7 @@ class InvoiceFactory extends ParentFactory
                         $invoice[$id] = $invoice;
                     }
                 }
-                if(!$invoice || $invoice->getPaidAmount() > 0) { // invoice is not fully and not partially paid
+                if(!$invoice || $invoice->getPaidAmount() <= 0) { // invoice is not fully and not partially paid
                     $invoicePaidStatus = new InvoicePaidStatus();
                     $invoicePaidStatus->setInvoiceNumber($id);
                     $invoicePaidStatus->setStatus(InvoicePaidStatus::STATUS_UNPAID);
