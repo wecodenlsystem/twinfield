@@ -54,12 +54,12 @@ class TransactionsDocument extends \DOMDocument
         $officeElement = $this->createElement('office', $transaction->getOffice());
         $codeElement = $this->createElement('code', $transaction->getCode());
         $dateElement = $this->createElement('date', $transaction->getDate());
-        $dueDateElement = $this->createElement('duedate', $transaction->getDueDate());
+        $currencyElement = $this->createElement('currency', $transaction->getCurrency());
 
         $headerElement->appendChild($officeElement);
         $headerElement->appendChild($codeElement);
         $headerElement->appendChild($dateElement);
-//        $headerElement->appendChild($dueDateElement);
+        $headerElement->appendChild($currencyElement);
 
         $linesElement = $this->createElement('lines');
         $transactionElement->appendChild($linesElement);
@@ -72,28 +72,27 @@ class TransactionsDocument extends \DOMDocument
             $linesElement->appendChild($lineElement);
 
             $dim1Element = $this->createElement('dim1', $transactionLine->getDim1());
-            $dim2Element = $this->createElement('dim2', $transactionLine->getDim2());
             $value = $transactionLine->getValue();
             $value = number_format($value, 2, '.', '');
             $valueElement = $this->createElement('value', $value);
 
             if ($transactionLine->getType() != 'total') {
-                $vatCodeElement = $this->createElement('vatcode', $transactionLine->getVatCode());
+                $invoiceNumberElement = $this->createElement('invoicenumber', $transaction->getInvoiceNumber());
+                $lineElement->appendChild($invoiceNumberElement);
+                $currencyDateElement = $this->createElement('currencydate', $transactionLine->getCurrencyDate());
+                $lineElement->appendChild($currencyDateElement);
+                $dim2Element = $this->createElement('dim2', $transactionLine->getDim2());
+                $lineElement->appendChild($dim2Element);
             }
 
             $descriptionNode = $this->createTextNode($transactionLine->getDescription());
             $descriptionElement = $this->createElement('description');
             $descriptionElement->appendChild($descriptionNode);
             $debitCreditElement = $this->createElement('debitcredit', $transactionLine->getDebitCredit());
-            $invoiceNumberElement = $this->createElement('invoicenumber', $transaction->getInvoiceNumber());
-            $currencyDateElement = $this->createElement('currencydate', $transactionLine->getCurrencyDate());
 
             $lineElement->appendChild($dim1Element);
-            $lineElement->appendChild($dim2Element);
             $lineElement->appendChild($debitCreditElement);
             $lineElement->appendChild($valueElement);
-            $lineElement->appendChild($invoiceNumberElement);
-            $lineElement->appendChild($currencyDateElement);
 
             if (($transactionLine->getPerformanceType())) {
                 $perfElement = $this->createElement('performancetype', $transactionLine->getPerformanceType());
@@ -103,10 +102,6 @@ class TransactionsDocument extends \DOMDocument
             if (($transactionLine->getVatValue())) {
                 $vatElement = $this->createElement('vatvalue', $transactionLine->getVatValue());
                 $lineElement->appendChild($vatElement);
-            }
-
-            if ($transactionLine->getType() != 'total') {
-                $lineElement->appendChild($vatCodeElement);
             }
 
             $lineElement->appendChild($descriptionElement);
