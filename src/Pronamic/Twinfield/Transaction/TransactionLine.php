@@ -33,6 +33,7 @@ class TransactionLine
     private $openValue;
     private $openBaseValue;
     private $matchStatus;
+    private $currencyDate;
 
     const PERFORMANCETYPE_SERVICES = 'services';
     const PERFORMANCETYPE_GOODS = 'goods';
@@ -329,4 +330,21 @@ class TransactionLine
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrencyDate()
+    {
+        return $this->currencyDate;
+    }
+
+    /**
+     * @param mixed $currencyDate
+     */
+    public function setCurrencyDate($currencyDate)
+    {
+        $this->currencyDate = $currencyDate;
+    }
+
 }

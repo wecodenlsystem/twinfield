@@ -55,13 +55,11 @@ class TransactionsDocument extends \DOMDocument
         $codeElement = $this->createElement('code', $transaction->getCode());
         $dateElement = $this->createElement('date', $transaction->getDate());
         $dueDateElement = $this->createElement('duedate', $transaction->getDueDate());
-        $invoiceNumberElement = $this->createElement('invoicenumber', $transaction->getInvoiceNumber());
 
         $headerElement->appendChild($officeElement);
         $headerElement->appendChild($codeElement);
         $headerElement->appendChild($dateElement);
-        $headerElement->appendChild($dueDateElement);
-        $headerElement->appendChild($invoiceNumberElement);
+//        $headerElement->appendChild($dueDateElement);
 
         $linesElement = $this->createElement('lines');
         $transactionElement->appendChild($linesElement);
@@ -86,17 +84,23 @@ class TransactionsDocument extends \DOMDocument
             $descriptionNode = $this->createTextNode($transactionLine->getDescription());
             $descriptionElement = $this->createElement('description');
             $descriptionElement->appendChild($descriptionNode);
+            $debitCreditElement = $this->createElement('debitcredit', $transactionLine->getDebitCredit());
+            $invoiceNumberElement = $this->createElement('invoicenumber', $transaction->getInvoiceNumber());
+            $currencyDateElement = $this->createElement('currencydate', $transactionLine->getCurrencyDate());
 
             $lineElement->appendChild($dim1Element);
             $lineElement->appendChild($dim2Element);
+            $lineElement->appendChild($debitCreditElement);
             $lineElement->appendChild($valueElement);
+            $lineElement->appendChild($invoiceNumberElement);
+            $lineElement->appendChild($currencyDateElement);
 
-            if (!empty($transactionLine->getPerformanceType())) {
+            if (($transactionLine->getPerformanceType())) {
                 $perfElement = $this->createElement('performancetype', $transactionLine->getPerformanceType());
                 $lineElement->appendChild($perfElement);
             }
 
-            if (!empty($transactionLine->getVatValue())) {
+            if (($transactionLine->getVatValue())) {
                 $vatElement = $this->createElement('vatvalue', $transactionLine->getVatValue());
                 $lineElement->appendChild($vatElement);
             }
