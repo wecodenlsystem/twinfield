@@ -64,11 +64,14 @@ class InvoiceMapper
 
         // Make an InvoiceTotals and loop through custom tags
         $invoiceTotals = new InvoiceTotals();
-        foreach ($totalsTags as $tag => $method) {
-            $_tag = $responseDOM->getElementsByTagName($tag)->item(0);
+        $totalsTag = $responseDOM->getElementsByTagName('totals')->item(0);
+        if($totalsTag != null && $totalsTag instanceof \DOMElement) {
+            foreach ($totalsTags as $tag => $method) {
+                $_tag = $totalsTag->getElementsByTagName($tag)->item(0);
 
-            if (isset($_tag) && isset($_tag->textContent)) {
-                $invoiceTotals->$method($_tag->textContent);
+                if (isset($_tag) && isset($_tag->textContent)) {
+                    $invoiceTotals->$method($_tag->textContent);
+                }
             }
         }
 
@@ -95,20 +98,22 @@ class InvoiceMapper
         );
 
         foreach ($responseDOM->getElementsByTagName('line') as $lineDOM) {
-            $temp_line = new InvoiceLine();
+            if ($lineDOM != null && $lineDOM instanceof \DOMElement) {
+                $temp_line = new InvoiceLine();
 
-            $temp_line->setID($lineDOM->getAttribute('id'));
+                $temp_line->setID($lineDOM->getAttribute('id'));
 
-            foreach ($lineTags as $tag => $method) {
-                $_tag = $lineDOM->getElementsByTagName($tag)->item(0);
+                foreach ($lineTags as $tag => $method) {
+                    $_tag = $lineDOM->getElementsByTagName($tag)->item(0);
 
-                if (isset($_tag) && isset($_tag->textContent)) {
-                    $temp_line->$method($_tag->textContent);
+                    if (isset($_tag) && isset($_tag->textContent)) {
+                        $temp_line->$method($_tag->textContent);
+                    }
                 }
-            }
 
-            $invoice->addLine($temp_line);
-            unset($temp_line);
+                $invoice->addLine($temp_line);
+                unset($temp_line);
+            }
         }
 
         return $invoice;
